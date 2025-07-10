@@ -72,7 +72,7 @@ export default function HomePage() {
           </div>
           <button
             className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
-            onClick={() => openModalWithPrice(2000)}
+            onClick={() => openModalWithPrice(1000)}
           >
             Bayar Sekarang
           </button>
@@ -92,7 +92,7 @@ export default function HomePage() {
           </div>
           <button
             className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
-            onClick={() => openModalWithPrice(4000)}
+            onClick={() => openModalWithPrice(2000)}
           >
             Bayar Sekarang
           </button>
