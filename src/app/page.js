@@ -1,94 +1,131 @@
+'use client';
+
 import Image from "next/image";
+import { useState } from "react";
 
-export default function Home() {
+export default function HomePage() {
+  const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [price, setPrice] = useState(null); // ← diubah dari number | null
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const openModalWithPrice = (selectedPrice) => {
+    setPrice(selectedPrice);
+    setModalOpen(true);
+    setLoading(false);
+    setName('');
+    setEmail('');
+  };
+
+  const handleSubmit = async () => {
+    if (!name || !email || !price) return alert("Nama dan email wajib diisi");
+    setLoading(true);
+
+    const response = await fetch("/api/transaction", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        order_id: "ORDER-" + Date.now(),
+        gross_amount: price,
+        name,
+        email,
+      }),
+    });
+
+    const data = await response.json();
+    setLoading(false);
+    setModalOpen(false);
+    window.location.href = data.redirect_url;
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="p-10 flex flex-col gap-20 w-full items-center min-h-screen bg-slate-200">
+      <span className="text-2xl xl:text-4xl text-center font-semibold font-sans">
+        Silahkan pilih pesanan anda
+      </span>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="/firebase-test"
-            rel="noopener noreferrer"
+      <div className="flex flex-col xl:flex-row w-full px-10 xl:px-30 gap-10 h-full">
+        {/* Snack */}
+        <div className="w-full flex flex-col gap-7 shadow-lg p-10 rounded-lg bg-white">
+          <div className="flex w-full justify-center">
+            <Image src="/img/snack.png" alt="beng-beng" width={160} height={38} priority />
+          </div>
+          <div className="flex items-center items-start justify-between gap-3">
+            <span className="text-md xl:text-xl font-medium capitalize">Snack</span>
+            <div className="flex flex-col items-end">
+              <span className="text-sm xl:text-lg font-bold uppercase">Beng - beng Coklat</span>
+              <span className="text-xs xl:text-sm font-thin">Rp. 2.000 / pcs</span>
+            </div>
+          </div>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
+            onClick={() => openModalWithPrice(2000)}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Test Firebase
-          </a>
+            Bayar Sekarang
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {/* Drink */}
+        <div className="w-full flex flex-col gap-7 shadow-lg p-10 rounded-lg bg-white">
+          <div className="flex w-full justify-center">
+            <Image src="/img/drink.png" alt="teh-gelas" width={160} height={38} priority />
+          </div>
+          <div className="flex items-center items-start justify-between gap-3">
+            <span className="text-md xl:text-xl font-medium capitalize">Drink</span>
+            <div className="flex flex-col items-end">
+              <span className="text-sm xl:text-lg font-bold uppercase">Teh Gelas</span>
+              <span className="text-xs xl:text-sm font-thin">Rp. 4.000 / pcs</span>
+            </div>
+          </div>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
+            onClick={() => openModalWithPrice(4000)}
+          >
+            Bayar Sekarang
+          </button>
+        </div>
+      </div>
+
+      {/* MODAL */}
+      {modalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-md">
+            <h2 className="text-lg font-semibold mb-4">Isi Data Pembeli</h2>
+            <input
+              type="text"
+              placeholder="Nama"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full border px-3 py-2 mb-3 rounded"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border px-3 py-2 mb-3 rounded"
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="px-4 py-2 border rounded text-gray-600"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                {loading ? "Memproses..." : "Bayar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
   );
 }
