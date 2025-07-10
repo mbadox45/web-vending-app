@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import CryptoJS from 'crypto-js';
 
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
@@ -10,12 +11,19 @@ export default function HomePage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
+  const secretKey = 'rahasia123';
+
   const openModalWithPrice = (selectedPrice) => {
     setPrice(selectedPrice);
     setModalOpen(true);
     setLoading(false);
     setName('');
     setEmail('');
+  };
+
+  const encryptData = (data) => {
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+    return encodeURIComponent(ciphertext);
   };
 
   const handleSubmit = async () => {
@@ -39,6 +47,8 @@ export default function HomePage() {
     setLoading(false);
     setModalOpen(false);
     window.location.href = data.redirect_url;
+    // const encrypted = encryptData({ name, email, gross_amount: price });
+    // window.location.href = "http://localhost:3000/success?data="+encrypted
   };
 
   return (
@@ -53,11 +63,11 @@ export default function HomePage() {
           <div className="flex w-full justify-center">
             <Image src="/img/snack.png" alt="beng-beng" width={160} height={38} priority />
           </div>
-          <div className="flex items-center items-start justify-between gap-3">
-            <span className="text-md xl:text-xl font-medium capitalize">Snack</span>
+          <div className="flex items-start justify-between gap-3">
+            <span className="text-md xl:text-xl font-medium capitalize">Snake</span>
             <div className="flex flex-col items-end">
-              <span className="text-sm xl:text-lg font-bold uppercase">Beng - beng Coklat</span>
-              <span className="text-xs xl:text-sm font-thin">Rp. 2.000 / pcs</span>
+              <span className="text-sm xl:text-lg font-bold uppercase">Makanan Ringan</span>
+              <span className="text-xs xl:text-sm font-thin">Rp. 1.000 / pcs</span>
             </div>
           </div>
           <button
@@ -76,8 +86,8 @@ export default function HomePage() {
           <div className="flex items-center items-start justify-between gap-3">
             <span className="text-md xl:text-xl font-medium capitalize">Drink</span>
             <div className="flex flex-col items-end">
-              <span className="text-sm xl:text-lg font-bold uppercase">Teh Gelas</span>
-              <span className="text-xs xl:text-sm font-thin">Rp. 4.000 / pcs</span>
+              <span className="text-sm xl:text-lg font-bold uppercase">Minuman Ringan</span>
+              <span className="text-xs xl:text-sm font-thin">Rp. 2.000 / pcs</span>
             </div>
           </div>
           <button
