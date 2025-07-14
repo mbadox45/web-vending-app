@@ -52,7 +52,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="p-10 flex flex-col gap-20 w-full items-center min-h-screen bg-slate-200">
+    <main className="p-10 flex flex-col gap-20 w-full items-center min-h-screen bg-slate-200 text-gray-950">
       <span className="text-2xl xl:text-4xl text-center font-semibold font-sans">
         Silahkan pilih pesanan anda
       </span>
