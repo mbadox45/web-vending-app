@@ -7,6 +7,7 @@ const secretKey = 'rahasia123';
 
 export default function SuccessContent() {
   const [decryptedData, setDecryptedData] = useState(null);
+  const [countdown, setCountdown] = useState(3);
   const searchParams = useSearchParams();
   const router = useRouter();
   const invoiceRef = useRef();
@@ -29,6 +30,15 @@ export default function SuccessContent() {
     } catch (err) {
       console.error('❌ Gagal kirim ke Firebase:', err);
     }
+  };
+
+  const downloadInvoice = () => {
+    const content = invoiceRef.current.innerHTML;
+    const blob = new Blob([content], { type: 'text/html' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'invoice.html';
+    link.click();
   };
 
   useEffect(() => {
@@ -54,24 +64,26 @@ export default function SuccessContent() {
         sendToFirebase(decrypted.gross_amount);
         hasSentToFirebase.current = true;
       }
-
     } catch (err) {
       console.error('❌ Gagal decrypt:', err);
     }
   }, []);
 
-  const handlePrint = () => {
-    const printContents = invoiceRef.current.innerHTML;
-    const win = window.open('', '', 'width=800,height=600');
-    win.document.write(`
-      <html>
-        <head><title>Invoice</title></head>
-        <body>${printContents}</body>
-      </html>
-    `);
-    win.document.close();
-    win.print();
-  };
+  useEffect(() => {
+    if (decryptedData) {
+      downloadInvoice();
+      const interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev === 1) {
+            clearInterval(interval);
+            router.push('/');
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [decryptedData]);
 
   return (
     <main className="p-6 min-h-screen bg-gray-100 flex flex-col items-center">
@@ -116,21 +128,11 @@ export default function SuccessContent() {
 
       {decryptedData && (
         <>
-          <button
-            onClick={handlePrint}
-            className="mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
-          >
-            Cetak Invoice
-          </button>
-          <button
-            onClick={() => router.push('/')}
-            className="mt-4 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded"
-          >
-            Kembali ke Halaman Utama
-          </button>
+          <p className="mt-6 text-sm text-gray-600">
+            Anda akan diarahkan ke halaman utama dalam <span className="font-bold">{countdown}</span> detik...
+          </p>
         </>
       )}
-
     </main>
   );
 }
