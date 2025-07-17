@@ -115,13 +115,22 @@ export default function SuccessContent() {
       )}
 
       {decryptedData && (
-        <button
-          onClick={handlePrint}
-          className="mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
-        >
-          Cetak Invoice
-        </button>
+        <>
+          <button
+            onClick={handlePrint}
+            className="mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+          >
+            Cetak Invoice
+          </button>
+          <button
+            onClick={() => router.push('/')}
+            className="mt-4 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded"
+          >
+            Kembali ke Halaman Utama
+          </button>
+        </>
       )}
+
     </main>
   );
 }
