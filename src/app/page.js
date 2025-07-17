@@ -64,7 +64,7 @@ export default function HomePage() {
             <Image src="/img/snack.png" alt="beng-beng" width={160} height={38} priority />
           </div>
           <div className="flex items-start justify-between gap-3">
-            <span className="text-md xl:text-xl font-medium capitalize">Snake</span>
+            <span className="text-md xl:text-xl font-medium capitalize">Snack</span>
             <div className="flex flex-col items-end">
               <span className="text-sm xl:text-lg font-bold uppercase">Makanan Ringan</span>
               <span className="text-xs xl:text-sm font-thin">Rp. 1.000 / pcs</span>
