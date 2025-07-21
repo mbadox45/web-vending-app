@@ -16,7 +16,7 @@ export async function POST(req) {
   const { order_id, gross_amount, name, email } = body;
 
   const snap = new midtransClient.Snap({
-    isProduction: false,
+    isProduction: true,
     serverKey: process.env.MIDTRANS_SERVER_KEY,
   });
 
